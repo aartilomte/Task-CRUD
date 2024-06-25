@@ -5,64 +5,58 @@ import { HttpService } from '../http.service';
 @Component({
   selector: 'app-body',
   templateUrl: './body.component.html',
-  styleUrl: './body.component.scss'
+  styleUrl: './body.component.scss',
 })
-export class TableComponent implements OnInit{
+export class TableComponent implements OnInit {
   dataId: any;
-  isUpdate! : boolean;
-  myForm : FormGroup | any;
+  isUpdate!: boolean;
+  myForm: FormGroup | any;
   data: any[] = [];
-  
 
   ngOnInit(): void {
     this.myForm = new FormGroup({
-      name : new FormControl(''),
-      price : new FormControl(''),
-      category : new FormControl('')
-     
-    })
-    this.http.getDt()
-    this.getAllData()
-    // this.http._refreshNeed.subscribe(()=>{
-    //   this.getAllData()
-    // })
-}
-
-onClick(){
-  if(!this.isUpdate){
-    this.http.postData(this.myForm.value)
-  }else{
-    this.http.updateDetails(this.dataId , this.myForm.value)
+      name: new FormControl(''),
+      price: new FormControl(''),
+      category: new FormControl(''),
+    });
+    this.http.getDt();
+    this.getAllData();
   }
-  this.isUpdate = false;
-  this.myForm.reset()
-}
-constructor(private http : HttpService){}
- 
 
-getAllData(){
-  this.http.newGetData.subscribe((param : any)=>{
-    this.data = param;
-  })
-}
+  onClick() {
+    if (!this.isUpdate) {
+      this.http.postData(this.myForm.value);
+    } else {
+      this.http.updateDetails(this.dataId, this.myForm.value);
+    }
+    this.isUpdate = false;
+    this.myForm.reset();
+  }
+  constructor(private http: HttpService) {}
 
-update(data : any){
-  console.log(data)
-  this.dataId = data
-  let currentId = this.data.find((a)=>{
-    this.getAllData()
-    return a.id === data 
-  })
-    this.myForm.setValue({name : currentId.name , price : currentId.price , category : currentId.category})
-    console.log(currentId)
- 
-  this.isUpdate = true
-}
+  getAllData() {
+    this.http.newGetData.subscribe((param: any) => {
+      this.data = param;
+    });
+  }
 
-onDelete(id: string) {
-  alert("you want delete item!")
-  this.http.deleteData(id)
-  this.getAllData()
-}
+  update(data: any) {
+    this.dataId = data;
+    let currentId = this.data.find((a) => {
+      this.getAllData();
+      return a.id === data;
+    });
+    this.myForm.setValue({
+      name: currentId.name,
+      price: currentId.price,
+      category: currentId.category,
+    });
+    this.isUpdate = true;
+  }
 
+  onDelete(id: string) {
+    alert('you want delete item!');
+    this.http.deleteData(id);
+    this.getAllData();
+  }
 }

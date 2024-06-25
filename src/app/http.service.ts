@@ -1,61 +1,65 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { Subject, map, tap } from "rxjs";
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Subject, map, tap } from 'rxjs';
 
 @Injectable()
+export class HttpService {
+  constructor(private http: HttpClient) {}
+  refreshNeed: any;
+  public newGetData = new Subject<any>();
 
-export class HttpService{
-    constructor(private http : HttpClient){}
-    refreshNeed: any;
-    public newGetData = new Subject<any>();
+  postData(post: any) {
+    this.http
+      .post(
+        'https://interview-28ad1-default-rtdb.asia-southeast1.firebasedatabase.app///table.json',
+        post
+      )
+      .subscribe((param: any) => {
+        this.getDt();
+      });
+  }
 
-    // get _refreshNeed(){
-    //     return this._refreshNeed$;
-    // }
-
-postData( post : any){
-    this.http.post('https://interview-28ad1-default-rtdb.asia-southeast1.firebasedatabase.app///table.json',post).pipe(
-        tap(()=>{
-            // this._refreshNeed.next()
+  getDt(): any {
+    this.http
+      .get(
+        'https://interview-28ad1-default-rtdb.asia-southeast1.firebasedatabase.app///table.json'
+      )
+      .pipe(
+        map((resp: any) => {
+          const myData = [];
+          for (let data in resp) {
+            myData.push({ ...resp[data], id: data, value: +resp[data].price });
+          }
+          this.newGetData.next(myData);
         })
-    ).subscribe((param : any)=>{
-        console.log(param)
-        this.getDt()
-    })
-}
+      )
+      .subscribe((param: any) => {
+        console.log(param);
+      });
+  }
 
- getDt() : any{
-    this.http.get('https://interview-28ad1-default-rtdb.asia-southeast1.firebasedatabase.app///table.json').pipe(map((resp : any)=>{
-        const myData = [];
-        for(let data in resp){
-            myData.push({...resp[data ], id : data , value : +resp[data].price})
-        }
-        console.log(myData);
-        this.newGetData.next(myData)
-    })).subscribe((param : any)=>{console.log(param)})
-}
+  deleteData(id: string) {
+    this.http
+      .delete(
+        'https://interview-28ad1-default-rtdb.asia-southeast1.firebasedatabase.app///table/' +
+          id +
+          '.json'
+      )
+      .subscribe((param: any) => {
+        this.getDt();
+      });
+  }
 
-deleteData(id : string){
-    this.http.delete('https://interview-28ad1-default-rtdb.asia-southeast1.firebasedatabase.app///table/'+id+'.json').pipe(
-        tap(()=>{
-            // this._refreshNeed.next()
-        })
-    ).subscribe((param : any)=>{
-        console.log(param)
-       this.getDt()
-    })
-}
-
-updateDetails(id:string , status:any){
-     this.http.put('https://interview-28ad1-default-rtdb.asia-southeast1.firebasedatabase.app///table/'+id+'.json',status).pipe(
-        tap(()=>{
-            // this._refreshNeed.next()
-        })
-    ).subscribe((param : any)=>{
-        console.log(param)
-         this.getDt()
-
-    })
-
- }
+  updateDetails(id: string, status: any) {
+    this.http
+      .put(
+        'https://interview-28ad1-default-rtdb.asia-southeast1.firebasedatabase.app///table/' +
+          id +
+          '.json',
+        status
+      )
+      .subscribe((param: any) => {
+        this.getDt();
+      });
+  }
 }
