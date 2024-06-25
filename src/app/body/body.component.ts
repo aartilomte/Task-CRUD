@@ -21,11 +21,11 @@ export class TableComponent implements OnInit{
       category : new FormControl('')
      
     })
-
+    this.http.getDt()
     this.getAllData()
-    this.http._refreshNeed.subscribe(()=>{
-      this.getAllData()
-    })
+    // this.http._refreshNeed.subscribe(()=>{
+    //   this.getAllData()
+    // })
 }
 
 onClick(){
@@ -41,8 +41,7 @@ constructor(private http : HttpService){}
  
 
 getAllData(){
-  this.http.getDt().subscribe((param : any)=>{
-    console.log(param)
+  this.http.newGetData.subscribe((param : any)=>{
     this.data = param;
   })
 }

@@ -14,18 +14,15 @@ export class ChartComponent implements OnInit{
 constructor(private http : HttpService){}
 
   ngOnInit(): void {
-    this.http._refreshNeed.subscribe(()=>{
-      this.barData()
+    this.http.newGetData.subscribe((data)=>{
+      this.dataset = [];
+      this.dataset = data;
+      console.log('asdf',this.dataset)
     })
-    this.barData()
+    // this.barData()
   }
 
   barData(){
-    this.http.getDt().subscribe(res => {
-      for(const i of res){
-        this.dataset.push(i)
-      }
-     return  this.dataset = [...this.dataset]
-    })
+    this.http.getDt()
   }
 }

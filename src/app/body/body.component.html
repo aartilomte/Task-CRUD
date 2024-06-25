@@ -7,6 +7,7 @@
                 <div class="form-group">
                     <label for="name">Name</label>
                     <input type="text" class="form-control" id="name" formControlName="name">
+                    <span class="small text-danger" *ngIf="myForm.get('name').touched && !myForm.get('name').valid">Name is required!</span>
                 </div>
                 <div class="form-group">
                     <label for="price">Price</label>
