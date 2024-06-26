@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { HttpService } from '../http.service';
 
 @Component({
@@ -15,9 +15,9 @@ export class TableComponent implements OnInit {
 
   ngOnInit(): void {
     this.myForm = new FormGroup({
-      name: new FormControl(''),
-      price: new FormControl(''),
-      category: new FormControl(''),
+      name: new FormControl('', Validators.required),
+      price: new FormControl('', Validators.required),
+      category: new FormControl('', Validators.required),
     });
     this.http.getDt();
     this.getAllData();
@@ -26,11 +26,14 @@ export class TableComponent implements OnInit {
   onClick() {
     if (!this.isUpdate) {
       this.http.postData(this.myForm.value);
+    this.myForm.reset();
+
     } else {
       this.http.updateDetails(this.dataId, this.myForm.value);
+    this.myForm.reset();
+
     }
     this.isUpdate = false;
-    this.myForm.reset();
   }
   constructor(private http: HttpService) {}
 

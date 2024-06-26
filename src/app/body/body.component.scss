@@ -1,3 +1,7 @@
-.ng-invalid.ng-touched , .ng-submitted .ng-invalid{
+.ng-invalid.ng-touched{
     border-color: red;
+}
+
+.form{
+    cursor: not-allowed;
 }
